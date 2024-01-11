@@ -1,0 +1,115 @@
+-- Tabella degli amministratori
+CREATE TABLE administrator (
+    admin_id SERIAL PRIMARY KEY,
+    admin_name VARCHAR(255) NOT NULL,
+    admin_surname VARCHAR(255) NOT NULL,
+    admin_username VARCHAR(255) UNIQUE NOT NULL,
+    admin_password VARCHAR(255) NOT NULL
+);
+
+--Inserimento amministratore
+INSERT INTO administrator(admin_name , admin_surname, admin_username, admin_password)
+VALUES('Gleb','Orlowsky','erteeus','0000');
+
+-- Tabella dei giocatori
+CREATE TABLE player (
+    player_id SERIAL PRIMARY KEY,
+    player_username VARCHAR(255) UNIQUE NOT NULL,
+    player_password VARCHAR(255) NOT NULL,
+    player_name VARCHAR(255) NOT NULL,
+    player_surname VARCHAR(255) NOT NULL,
+    birth_date DATE,
+	retirement_date DATE,
+    foot VARCHAR(50),
+    role_id INT, -- Riferimento alla tabella dei ruoli
+    FOREIGN KEY (role_id) REFERENCES player_role(role_id)
+);
+
+-- Tabella dei ruoli
+CREATE TABLE roleList(
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(255) NOT NULL
+);
+
+-- Tabella associazione tra la table player e role_list
+CREATE TABLE player_role(
+    association_id SERIAL PRIMARY KEY,
+    player_id INTEGER REFERENCES player(player_id),
+    role_id INTEGER REFERENCES roleList(role_id),
+    CONSTRAINT unique_player_roleList UNIQUE (player_id, role_id)
+);
+
+-- Tabella delle caratteristiche
+CREATE TABLE characteristic (
+    characteristic_id SERIAL PRIMARY KEY,
+    characteristic VARCHAR(255) NOT NULL
+);
+
+-- Tabella di associazione giocatore_caratteristica
+CREATE TABLE characteristic_player (
+    association_id SERIAL PRIMARY KEY,
+    player_id INTEGER REFERENCES player(player_id),
+    characteristic_id INTEGER REFERENCES characteristic(characteristic_id),
+    CONSTRAINT unique_player_characteristic UNIQUE (player_id, characteristic_id)
+);
+
+-- Tabella delle persone
+CREATE TABLE people (
+    people_id SERIAL PRIMARY KEY,
+    people_name VARCHAR(255) NOT NULL,
+    people_surname VARCHAR(255) NOT NULL,
+    people_birthDate DATE NOT NULL
+);
+
+-- Tabella degli allenatori
+CREATE TABLE coach (
+    coach_id SERIAL PRIMARY KEY,
+    people_id INTEGER REFERENCES people(people_id)
+);
+
+-- Tabella dei dirigenti
+CREATE TABLE manager (
+    manager_id SERIAL PRIMARY KEY,
+    people_id INTEGER REFERENCES people(people_id)
+);
+
+-- Tabella delle squadre
+CREATE TABLE team (
+    team_id SERIAL PRIMARY KEY,
+    team_name VARCHAR(255) NOT NULL,
+    team_country VARCHAR(255) NOT NULL
+);
+
+-- Tabella della militanza
+CREATE TABLE career (
+    career_id SERIAL PRIMARY KEY,
+    player_id INTEGER REFERENCES player(player_id),
+    team_id INTEGER REFERENCES team(team_id),
+    start_date DATE NOT NULL,
+    end_date DATE,
+    match_played INTEGER,
+    goal_scored INTEGER,
+    goal_recieved INTEGER,
+    trophies_won INTEGER
+);
+
+--aggiunta colonna people_id alla table player, con un riferimento alla tabella persone
+ALTER TABLE player ADD COLUMN people_id INTEGER REFERENCES people(people_id);  
+
+
+-- Tabella dei trofei
+CREATE TABLE trophy (
+    trophy_id SERIAL PRIMARY KEY,
+    trophy_name VARCHAR(255) NOT NULL
+    
+);
+
+-- Tabella di associazione giocatore_trofeo
+CREATE TABLE player_trophy (
+    association_id SERIAL PRIMARY KEY,
+    player_id INTEGER REFERENCES player(player_id),
+    trophy_id INTEGER REFERENCES trophy(trophy_id),
+    CONSTRAINT unique_player_trophy UNIQUE (player_id, trophy_id)
+);
+
+
