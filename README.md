@@ -1,3 +1,0 @@
-# OO-DB
-
-CIAO
