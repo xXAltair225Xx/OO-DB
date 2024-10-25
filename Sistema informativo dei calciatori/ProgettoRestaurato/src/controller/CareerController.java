@@ -9,12 +9,11 @@ import java.util.List;
 public class CareerController {
     private static CareerDAO careerDAO;
 
-    // Static block to initialize the static field
     static {
         careerDAO = new CareerDAO();
     }
 
-    // Static methods using careerDAO
+   
     public static void addCareer(String username, String team, java.sql.Date startDate, java.sql.Date endDate) {
         careerDAO.addCareer(username, team, startDate, endDate);
     }
