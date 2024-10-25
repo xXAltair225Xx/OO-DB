@@ -128,7 +128,6 @@ public class PlayerProfileFrame implements ActionListener {
                     java.sql.Date startDate = parseDate(startDateString);
 
                     int careerId = CareerController.getCareerId(username, teamName, startDate);
-                    System.out.println(careerId);
                     List<Match> matchesList = MatchController.getMatchesForCareerPeriod(careerId);
                     if (careerId != -1) {
                         new MatchesPlayedFrame(matchesList);
