@@ -12,6 +12,7 @@ import java.util.List;
 
 public class CareerDAO {
 
+    //Recupera le informazioni sulla carriera di un giocatore ricevendo come input il suo ID
     public static List<CareerInfo> getCareerInfo(int playerId) {
         List<CareerInfo> careerInfoList = new ArrayList<>();
 
@@ -45,6 +46,7 @@ public class CareerDAO {
         return careerInfoList;
     }
 
+    //aggiunge una nuova militanza al giocatore
     public static void addCareer(String username, String team, Date startDatePicker, Date endDatePicker) {
         int playerId = PlayerController.getPlayerIdByUsername(username);
         int teamId = TeamController.getTeamIdByName(team);
@@ -67,38 +69,13 @@ public class CareerDAO {
                 }
                 pstmt.executeUpdate();
             }
-            System.out.println("Career added successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void updateStartDate(int careerId, LocalDate newStartDate) {
-        try (Connection conn =DBConnection.getConnection()) {
-            String query = "UPDATE career SET start_date = ? WHERE career_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                pstmt.setDate(1, java.sql.Date.valueOf(newStartDate));
-                pstmt.setInt(2, careerId);
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static void updateEndDate(int careerId, LocalDate newEndDate) {
-        try (Connection conn =DBConnection.getConnection()) {
-            String query = "UPDATE career SET end_date = ? WHERE career_id = ?";
-            try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-                pstmt.setDate(1, java.sql.Date.valueOf(newEndDate));
-                pstmt.setInt(2, careerId);
-                pstmt.executeUpdate();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
+    //Recupera l'ID di una carriera
     public static int getCareerId(String username, String teamName, Date startDate) {
         int careerId = -1; // Valore predefinito nel caso in cui non venga trovata una corrispondenza
 
@@ -124,6 +101,7 @@ public class CareerDAO {
         return careerId;
     }
 
+    //Recupera i nomi dei trofei
     public  String[] getTrophyName() {
         List<String> trophies = new ArrayList<>();
         try (Connection connection =DBConnection.getConnection()) {
@@ -133,13 +111,9 @@ public class CareerDAO {
                  ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 
                 while (resultSet.next()) {
-                    // Crea un oggetto Giocatore per ogni riga nel risultato
 
                     String role = resultSet.getString("trophy_name");
 
-
-
-                    // Aggiungi il giocatore alla lista
                     trophies.add(role);
                 }
 
