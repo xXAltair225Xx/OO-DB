@@ -22,14 +22,6 @@ public class CareerController {
         return careerDAO.getCareerInfo(playerId);
     }
 
-    public static void updateStartDate(int careerId, LocalDate newStartDate) {
-        careerDAO.updateStartDate(careerId, newStartDate);
-    }
-
-    public static void updateEndDate(int careerId, LocalDate newEndDate) {
-        careerDAO.updateEndDate(careerId, newEndDate);
-    }
-
     public static int getCareerId(String username, String teamName, java.sql.Date startDate) {
         return careerDAO.getCareerId(username, teamName, startDate);
     }
