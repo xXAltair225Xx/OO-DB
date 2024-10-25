@@ -97,7 +97,6 @@ class PlayerModifyAlterFrame {
             }
 
             if (nuovo != null) {
-                System.out.println(nuovo + " Ok");
                 PlayerController.modifyPlayerData(username, campo, nuovo);
             } else if (!selectedRoles.isEmpty()) {
                 PlayerController.deletePlayerRoleOrCharacteristic(playerId, "Role");
