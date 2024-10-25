@@ -8,6 +8,7 @@ import db_connection.DBConnection;
 
 public class TeamDAO {
 
+    //Aggiunge un trofeo associato ad una squadra
     public static void addTeamTrophy(int team_id, int trophy, Date year) {
         try (Connection connection = DBConnection.getConnection()) {
 
@@ -32,6 +33,8 @@ public class TeamDAO {
             throw new RuntimeException(e);
         }
     }
+
+    //Recupera i nomi delle squadre
     public static String[] getTeamName() {
         List<String> characteristic = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {
@@ -58,6 +61,8 @@ public class TeamDAO {
 
         return characteristic.toArray(new String[0]);
     }
+
+    //Recupera i nomi dei trofei di squadra
     public static String[] getTeamTrophyName() {
         List<String> trophies = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {
@@ -67,12 +72,8 @@ public class TeamDAO {
                  ResultSet resultSet = statement.executeQuery(sqlQuery)) {
 
                 while (resultSet.next()) {
-                    // Crea un oggetto Giocatore per ogni riga nel risultato
 
                     String role = resultSet.getString("trophy_name");
-
-
-
                     // Aggiungi il giocatore alla lista
                     trophies.add(role);
                 }
@@ -84,6 +85,8 @@ public class TeamDAO {
 
         return trophies.toArray(new String[0]);
     }
+
+    //Recupera l'ID di una squadra tramite il suo nome
     public static int getTeamIdByName(String teamName) {
         int teamId = -1; // Valore di default nel caso in cui il nome della squadra non venga trovato
         try (Connection conn =DBConnection.getConnection()) {
