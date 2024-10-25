@@ -9,6 +9,7 @@ import java.util.List;
 
 public class MatchDAO {
 
+    //Recupera le partite giocate durante una determinata militanza
     public static List<Match> getMatchesForCareerPeriod(int careerId) {
         List<Match> matches = new ArrayList<>();
 
@@ -44,6 +45,8 @@ public class MatchDAO {
 
         return matches;
     }
+
+    //Aggiunge una nuova partita
     public static int addNewMatch(int homeTeam, int guestTeam, Date matchDate) {
         int matchId = -1; // Inizializza il matchId a un valore di default
 
