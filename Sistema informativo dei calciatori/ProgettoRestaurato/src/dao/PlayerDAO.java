@@ -58,7 +58,6 @@ public class PlayerDAO {
             while (rs.next()) {
                 String playerName = rs.getString("player_name");
                 String playerSurname = rs.getString("player_surname");
-                System.out.println(playerName + " " + playerSurname);
                 playerNames.add(playerName + " " + playerSurname);
 
             }
