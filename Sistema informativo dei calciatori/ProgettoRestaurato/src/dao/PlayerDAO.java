@@ -18,6 +18,8 @@ public class PlayerDAO {
     public HashMap<String, String> loadPlayerCredentials() {
         return utilDAO.loadCredentials("username", "password", "player");
     }
+
+    //Recupera l'ID di un giocatore cercando una corrispondenza tramite l'username
     public static int getPlayerIdByUsername(String username) {
         int playerId = -1; // Valore di default nel caso in cui non venga trovato alcun giocatore
 
@@ -39,6 +41,8 @@ public class PlayerDAO {
 
         return playerId;
     }
+
+    //Recupera i giocatori che fanno parte di una determinata squadra
     public String[] getPlayersByTeamId(int teamId) {
         List<String> playerNames = new ArrayList<>();
 
@@ -63,6 +67,8 @@ public class PlayerDAO {
         }
         return playerNames.toArray(new String[0]);
     }
+
+    //Recupera l'ID di un giocatore cercando una corrispondenza con il suo nome
     public int getPlayerIdByFullName(String fullName) {
         int playerId = -1; // Valore di default nel caso in cui il giocatore non venga trovato
         try (Connection conn = DBConnection.getConnection()) {
@@ -78,9 +84,11 @@ public class PlayerDAO {
         }
         return playerId;
     }
+
+    //Aggiunge i ruoli a un giocatore
     public void addPlayerRole(int playerId, List<Integer> roles) {
         try (Connection connection = DBConnection.getConnection()) {
-            // Elimina tutti i ruoli associati al giocatore
+            // Elimina tutti i ruoli associati al giocatore per evitare una seconda aggiunta degli stessi ruoli
             String deleteTrophiesQuery = "DELETE FROM player_role WHERE player_id = ?";
             try (PreparedStatement deleteTrophiesStatement = connection.prepareStatement(deleteTrophiesQuery)) {
                 deleteTrophiesStatement.setInt(1, playerId);
@@ -100,6 +108,8 @@ public class PlayerDAO {
             throw new RuntimeException(e);
         }
     }
+
+    //Aggiunge un trofeo associato a un giocatore
     public static void addPlayerTrophy(int player_id, int trophy, Date year) {
         try (Connection connection = DBConnection.getConnection()) {
 
@@ -124,11 +134,12 @@ public class PlayerDAO {
             throw new RuntimeException(e);
         }
     }
+
+    //Aggiunge un nuovo giocatore
     public void addNewPlayer(String usernameNewPlayer, String passwordNewPlayer, String nome, String cognome, Date dataNascita, String piede, List<Integer> roles) {
         try (Connection connection = DBConnection.getConnection()) {
-            // Esegui l'istruzione SQL di INSERT per aggiungere un nuovo giocatore
+            
             String sqlQuery = "INSERT INTO player (player_username, player_password, player_name, player_surname, birth_date, foot) VALUES (?, ? , ? , ? , ? , ?)";
-
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS)) {
                 preparedStatement.setString(1, usernameNewPlayer);
@@ -152,19 +163,20 @@ public class PlayerDAO {
                             addPlayerRole(playerId, roles);
                             new CheckFrame("Success");
 
-                            System.out.println("Giocatore aggiunto con successo!");
                         } else {
-                            System.out.println("Errore durante il recupero dell'ID del giocatore.");
+                            new CheckFrame("Error!");
                         }
                     }
                 } else {
-                    System.out.println("Errore durante l'aggiunta del giocatore.");
+                    new CheckFrame("Error!");
                 }
             }
         } catch (SQLException e) {
             new CheckFrame("This Username is already used");
         }
     }
+
+    //Aggiunge le statistiche di un giocatore inerenti ad una determinata partita
     public void addPlayerMatchStats(int playerId, int teamId, int matchId, int scoredGoals, int roleId) {
         try (Connection conn = DBConnection.getConnection()) {
             String query = "INSERT INTO player_match_stats (player_id, team_id, match_id, scored_goals, role_id) VALUES (?, ?, ?, ?, ?)";
@@ -179,6 +191,8 @@ public class PlayerDAO {
             ex.printStackTrace();
         }
     }
+
+    //recupera i nomi delle caratteristiche presenti nella DB
     public String[] getCharacteristicName() {
         List<String> characteristic = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {
@@ -206,6 +220,7 @@ public class PlayerDAO {
         return characteristic.toArray(new String[0]);
     }
 
+    //recupera una lista di tutti i giocatori
     public static List<Player> getPlayer() {
         List<Player> players = new ArrayList<>();
 
@@ -249,6 +264,8 @@ public class PlayerDAO {
         }
         return players;
     }
+
+    //Permette di ritirate un giocatore
     public void playerRetirement(String playerUsername) {
         try (Connection connection = DBConnection.getConnection()) {
             String sqlQuery = "UPDATE player SET retirement_date = CURRENT_TIMESTAMP WHERE player_username = ?";
@@ -265,6 +282,8 @@ public class PlayerDAO {
             throw new RuntimeException(e);
         }
     }
+
+    //Elimina un giocatore
     public void deletePlayer(int player_id){
 
         try (Connection connection = DBConnection.getConnection()) {
@@ -293,6 +312,8 @@ public class PlayerDAO {
         }
 
     }
+
+    //Recupera la data di ritiro di un giocatore
     public Date getRetirementDate(String username){
 
         String sqlQuery = "SELECT retirement_date FROM player WHERE player_username = ?";
@@ -313,6 +334,8 @@ public class PlayerDAO {
         }
         return null;
     }
+
+    //Recupera i nomi dei ruoli presenti nella DB
     public String[] getRolesName() {
         List<String> roles = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {
@@ -339,6 +362,8 @@ public class PlayerDAO {
 
         return roles.toArray(new String[0]);
     }
+
+    //Modifica i dati di un giocatore
     public void modifyPlayerData(String username, String campo, String nuovo) {
         String sqlQuery = "";
         switch (campo) {
@@ -355,18 +380,19 @@ public class PlayerDAO {
                 sqlQuery = "UPDATE player SET foot = ? WHERE player_username = ?";
                 break;
 
-            // Aggiungi altri casi per gli altri campi da modificare
         }
 
         try (Connection connection = DBConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
             preparedStatement.setString(1, nuovo);
             preparedStatement.setString(2, username);
-            preparedStatement.executeUpdate(); // Esegui la query per effettuare la modifica nel database
+            preparedStatement.executeUpdate(); 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    //Recupero dei ruoli di un giocatore tramite il suo ID
     public static int getRoleIdByPlayerId(int playerId) {
         int roleId = -1; // Valore di default nel caso in cui il ruolo non venga trovato
         try (Connection conn = DBConnection.getConnection()) {
@@ -399,6 +425,8 @@ public class PlayerDAO {
             throw new RuntimeException(e);
         }
     }
+
+    //Modifica le caratteristiche di un giocatore
     public static void modifyPlayerCharacteristics(int playerId, int characteristics) {
         try (Connection connection = DBConnection.getConnection()) {
             String addRolesQuery = "INSERT INTO characteristic_player(player_id, characteristic_id) VALUES (?, ?)";
