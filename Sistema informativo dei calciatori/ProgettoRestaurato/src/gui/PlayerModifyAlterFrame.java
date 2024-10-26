@@ -82,7 +82,7 @@ class PlayerModifyAlterFrame {
             if (field != null) {
                 nuovo = field.getText();
             } else if (passwordField != null) {
-                nuovo = new String(passwordField.getPassword());
+               nuovo = hashpw(passwordField.getText(), gensalt());
             } else if (footComboBox != null) {
                 nuovo = (String) footComboBox.getSelectedItem();
             } else if (roleList != null && roleList.getSelectedIndices().length > 0) {
